@@ -93,7 +93,7 @@ class AttendanceReport {
     return AttendanceReport(
       selectedDay: selectedDay,
       recordedDays: recorded.length,
-      classes: _classSummaries(students),
+      classes: _classSummaries(students, selectedDay),
       students: _studentSummaries(students, recorded),
       trend: recorded
           .take(trendDays)
@@ -174,10 +174,18 @@ class AttendanceReport {
     return buffer.toString();
   }
 
-  static List<ClassSummary> _classSummaries(List<Student> students) {
+  /// Splits the roster per section using the marks of the selected day, so the
+  /// caller never has to resolve the roster beforehand.
+  static List<ClassSummary> _classSummaries(
+    List<Student> students,
+    AttendanceDay selectedDay,
+  ) {
     final byClass = <String, List<Student>>{};
     for (final student in students) {
-      byClass.putIfAbsent(student.className, () => <Student>[]).add(student);
+      final resolved = student.copyWith(
+        status: selectedDay.marks[student.id] ?? AttendanceStatus.absent,
+      );
+      byClass.putIfAbsent(resolved.className, () => <Student>[]).add(resolved);
     }
 
     final summaries = byClass.entries

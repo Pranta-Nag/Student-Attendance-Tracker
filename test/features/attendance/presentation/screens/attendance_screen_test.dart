@@ -242,6 +242,10 @@ void main() {
 
       expect(find.text('No student matches the filters'), findsOneWidget);
 
+      await reveal(
+        tester,
+        find.widgetWithText(TextButton, 'Clear filters'),
+      );
       await tester.tap(find.widgetWithText(TextButton, 'Clear filters'));
       await tester.pumpAndSettle();
 
@@ -276,13 +280,12 @@ void main() {
       final provider = await pumpApp(tester);
       await addStudent(tester, 'Ada');
       await addStudent(tester, 'Grace');
+
+      await tester.tap(find.byIcon(Icons.chevron_left_rounded));
+      await tester.pumpAndSettle();
       provider.markAllPresent();
 
-      await tester.tap(find.byIcon(Icons.more_vert_rounded));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Go to today'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byIcon(Icons.chevron_left_rounded));
+      await tester.tap(find.byIcon(Icons.chevron_right_rounded));
       await tester.pumpAndSettle();
 
       expect(provider.stats.present, 0);
@@ -293,8 +296,10 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(provider.stats.present, 2);
-      expect(find.text('Copied 2 marks from the previous lesson'),
-          findsOneWidget);
+      expect(
+        find.text('Copied 2 marks from the previous lesson'),
+        findsOneWidget,
+      );
     });
   });
 
@@ -310,7 +315,12 @@ void main() {
       expect(find.text('Ada'), findsOneWidget);
       expect(find.text('Lessons recorded'), findsOneWidget);
 
-      await tester.tap(find.byIcon(Icons.ios_share_rounded));
+      await tester.tap(
+        find.descendant(
+          of: find.byType(AppBar),
+          matching: find.byIcon(Icons.ios_share_rounded),
+        ),
+      );
       await tester.pumpAndSettle();
 
       expect(
@@ -346,6 +356,7 @@ void main() {
     ) async {
       final settings = SettingsProvider();
       final provider = await pumpApp(tester, settings: settings);
+      provider.addStudent('Ada Lovelace');
 
       await tester.tap(find.text('Settings'));
       await tester.pumpAndSettle();

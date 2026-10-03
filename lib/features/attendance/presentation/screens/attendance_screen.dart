@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/utils/date_formats.dart';
 import '../actions/roster_actions.dart';
 import '../actions/settings_actions.dart';
 import '../dialogs/roster_filter_sheet.dart';
@@ -38,7 +39,7 @@ class AttendanceScreen extends StatelessWidget {
           SliverFillRemaining(
             hasScrollBody: false,
             child: EmptyStudentsView(
-              caption: profile.detailsLine,
+              caption: profile.caption,
               onAddStudent: () => addStudentFlow(context),
               onLoadSample: () => loadSampleClassFlow(context),
             ),
@@ -76,7 +77,9 @@ class AttendanceScreen extends StatelessWidget {
               const SizedBox(height: AppSpacing.sm),
               AttendanceSummary(
                 stats: provider.stats,
-                label: profile.detailsLine.isEmpty ? null : profile.detailsLine,
+                label: profile.teacher.trim().isEmpty
+                    ? null
+                    : profile.teacher.trim(),
               ),
               const SizedBox(height: AppSpacing.sm),
               RosterToolbar(
@@ -180,7 +183,7 @@ class _SchoolBanner extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppRadius.classic * 3),
             ),
             child: Text(
-              '$marked / $total marked',
+              '${formatCount(marked)} / ${formatCount(total)} marked',
               style: theme.textTheme.labelSmall?.copyWith(
                 fontWeight: FontWeight.w700,
                 color: complete

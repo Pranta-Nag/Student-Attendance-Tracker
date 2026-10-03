@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../domain/models/attendance_stats.dart';
 import 'meter_bar.dart';
-import 'status_visual.dart';
 
 /// Header panel of the register: the four counters, the attendance meter and
 /// the one line summary. It receives a plain [AttendanceStats] so it can be
@@ -187,31 +186,6 @@ class _StatCell extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-/// Status legend, so the four colours are self explanatory.
-class StatusLegend extends StatelessWidget {
-  const StatusLegend({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Wrap(
-      spacing: AppSpacing.sm,
-      runSpacing: AppSpacing.sm,
-      children: [
-        for (final status in allAttendanceStatuses)
-          StatusChip(status: status, showIcon: false),
-        Text(
-          'Tap a name for details',
-          style: theme.textTheme.labelSmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-      ],
     );
   }
 }

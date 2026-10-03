@@ -1,5 +1,7 @@
-import 'package:flutter/services.dart';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/utils/app_feedback.dart';
@@ -11,7 +13,7 @@ import '../providers/settings_provider.dart';
 ///
 /// Exporting to the clipboard keeps the app dependency free while still being
 /// enough to paste the table into a spreadsheet, a report or a message.
-Future<void> exportReportFlow(BuildContext context) async {
+void exportReportFlow(BuildContext context) {
   final attendance = context.read<AttendanceProvider>();
   final settings = context.read<SettingsProvider>();
 
@@ -26,8 +28,9 @@ Future<void> exportReportFlow(BuildContext context) async {
   }
 
   final csv = report.toCsv(profile: settings.profile);
-  await Clipboard.setData(ClipboardData(text: csv));
-  if (!context.mounted) return;
+  // The clipboard write is fire and forget: the message must not wait for the
+  // platform channel round trip.
+  unawaited(Clipboard.setData(ClipboardData(text: csv)));
   showAppMessage(
     context,
     'Report copied to the clipboard (${report.recordedDays} '

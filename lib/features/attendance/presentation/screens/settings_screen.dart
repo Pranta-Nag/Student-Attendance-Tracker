@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/utils/date_formats.dart';
 import '../../domain/reports/attendance_report.dart';
 import '../actions/settings_actions.dart';
 import '../providers/attendance_provider.dart';
@@ -166,11 +167,11 @@ class SettingsScreen extends StatelessWidget {
             const DetailRow(label: 'App', value: 'School Attendance 1.0.0'),
             DetailRow(
               label: 'Students',
-              value: '${attendance.totalStudents}',
+              value: formatCount(attendance.totalStudents),
             ),
             DetailRow(
               label: 'Lessons recorded',
-              value: '${attendance.history.length}',
+              value: formatCount(attendance.history.length),
             ),
             DetailRow(
               label: 'Interface',

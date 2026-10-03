@@ -33,6 +33,11 @@ class SchoolProfile {
         if (academicYear.trim().isNotEmpty) academicYear.trim(),
       ].join(' • ');
 
+  /// Identity shown at the top of the register: the school and, when known,
+  /// the section it belongs to.
+  String get caption =>
+      detailsLine.isEmpty ? schoolName : '$schoolName • $detailsLine';
+
   SchoolProfile copyWith({
     String? schoolName,
     String? section,
